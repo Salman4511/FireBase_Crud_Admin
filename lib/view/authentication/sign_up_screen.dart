@@ -1,5 +1,6 @@
 import 'package:auth_app_admin/controller/auth.dart';
 import 'package:auth_app_admin/view/home_screen/home_screen.dart';
+import 'package:auth_app_admin/view/widgets/signup_textformfield_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -12,24 +13,18 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-
-
-
-Future<void>createUserWithEmailAndPassword()async{
-  try {
-    await Auth().createUserWithEmailAndPassword(
-      email: _email.text,
-       password: _password.text
-       );
-  }on FirebaseAuthException catch (e) {
-    setState(() {
-      errorMessage = e.message!;
-    });
-    
+  Future<void> createUserWithEmailAndPassword() async {
+    try {
+      await Auth().createUserWithEmailAndPassword(
+          email: _email.text, password: _password.text);
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        errorMessage = e.message!;
+      });
+    }
   }
-}
 
-  String errorMessage= '';
+  String errorMessage = '';
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
   final TextEditingController _confirmpass = TextEditingController();
@@ -114,7 +109,6 @@ Future<void>createUserWithEmailAndPassword()async{
                     padding: const EdgeInsets.all(20.0),
                     child: Column(
                       children: [
-                       
                         const SizedBox(
                           height: 10,
                         ),
@@ -123,27 +117,10 @@ Future<void>createUserWithEmailAndPassword()async{
                             FadeEffect(duration: 800.ms),
                             const SlideEffect(curve: Curves.easeIn)
                           ],
-                          child: TextFormField(
+                          child: SignUpTextFormFieldWidget(
                             controller: _email,
-                            cursorColor: Colors.white,
-                            keyboardType: TextInputType.emailAddress,
-                            decoration: const InputDecoration(
-                              labelText: "Email",
-                              labelStyle: TextStyle(color: Colors.black),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.red),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.red),
-                              ),
-                              prefixIcon: Icon(Icons.email),
-                            ),
+                            label: "Email",
+                            prefixIcon: Icons.email,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Please enter your email';
@@ -153,111 +130,65 @@ Future<void>createUserWithEmailAndPassword()async{
                               }
                               return null;
                             },
-                            style: const TextStyle(
-                                color: Color.fromARGB(255, 0, 0, 0)),
+                            isSuffixRequired: false,
                           ),
                         ),
                         const SizedBox(
                           height: 10,
                         ),
                         Animate(
-                          effects: [
-                            FadeEffect(duration: 800.ms),
-                            const SlideEffect(curve: Curves.easeIn)
-                          ],
-                          child: TextFormField(
-                            controller: _password,
-                            obscureText: isObscure ? true : false,
-                            cursorColor: Colors.white,
-                            keyboardType: TextInputType.visiblePassword,
-                            decoration: InputDecoration(
-                              labelText: "Password",
-                              labelStyle: const TextStyle(color: Colors.black),
-                              enabledBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
-                              ),
-                              focusedBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
-                              ),
-                              errorBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.red),
-                              ),
-                              focusedErrorBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.red),
-                              ),
-                              prefixIcon: const Icon(Icons.lock),
-                              suffixIcon: IconButton(
-                                icon: const Icon(Icons.visibility),
-                                onPressed: () {
-                                  setState(() {
-                                    isObscure = !isObscure;
-                                  });
-                                },
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your password';
-                              }
-                              if (value.length < 6) {
-                                return 'Password must be at least 6 characters';
-                              }
-                              return null;
-                            },
-                            style: const TextStyle(
-                                color: Color.fromARGB(255, 0, 0, 0)),
-                          ),
-                        ),
+                            effects: [
+                              FadeEffect(duration: 800.ms),
+                              const SlideEffect(curve: Curves.easeIn)
+                            ],
+                            child: SignUpTextFormFieldWidget(
+                              controller: _password,
+                              label: 'PassWord',
+                              prefixIcon: Icons.lock,
+                              isSuffixRequired: true,
+                              suffixIconOnPressed: () {
+                                setState(() {
+                                  isObscure = !isObscure;
+                                });
+                              },
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter your password';
+                                }
+                                if (value.length < 6) {
+                                  return 'Password must be at least 6 characters';
+                                }
+                                return null;
+                              },
+                            )),
                         const SizedBox(
                           height: 10,
                         ),
                         Animate(
-                          effects: [
-                            FadeEffect(duration: 800.ms),
-                            const SlideEffect(curve: Curves.easeIn)
-                          ],
-                          child: TextFormField(
-                            controller: _confirmpass,
-                            obscureText: isObscure2 ? true : false,
-                            cursorColor: Colors.white,
-                            keyboardType: TextInputType.visiblePassword,
-                            decoration: InputDecoration(
-                              labelText: "Confirm Password",
-                              labelStyle: const TextStyle(color: Colors.black),
-                              enabledBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
-                              ),
-                              focusedBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
-                              ),
-                              errorBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.red),
-                              ),
-                              focusedErrorBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.red),
-                              ),
-                              suffixIcon: IconButton(
-                                icon: const Icon(Icons.visibility),
-                                onPressed: () {
-                                  setState(() {
-                                    isObscure2 = !isObscure2;
-                                  });
-                                },
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please confirm your password';
-                              }
-                              if (value != _password.text) {
-                                return 'Passwords do not match';
-                              }
-                              return null;
-                            },
-                            style: const TextStyle(
-                                color: Color.fromARGB(255, 0, 0, 0)),
-                          ),
-                        ),
+                            effects: [
+                              FadeEffect(duration: 800.ms),
+                              const SlideEffect(curve: Curves.easeIn)
+                            ],
+                            child: SignUpTextFormFieldWidget(
+                              controller: _confirmpass,
+                              label: 'Confirm PassWord',
+                              prefixIcon: Icons.lock,
+                              isSuffixRequired: true,
+                              suffixIconOnPressed: () {
+                                setState(() {
+                                  isObscure = !isObscure;
+                                });
+                              },
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please confirm your password';
+                                }
+                                if (value != _password.text) {
+                                  return 'Passwords do not match';
+                                }
+                                return null;
+                              },
+                            )),
                         const SizedBox(
                           height: 20,
                         ),
@@ -273,7 +204,7 @@ Future<void>createUserWithEmailAndPassword()async{
                             child: ElevatedButton(
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
-                                 createUserWithEmailAndPassword();
+                                  createUserWithEmailAndPassword();
                                 }
                               },
                               style: ElevatedButton.styleFrom(
@@ -354,7 +285,11 @@ Future<void>createUserWithEmailAndPassword()async{
                           ],
                           child: TextButton(
                             onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen(),));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const HomeScreen(),
+                                  ));
                             },
                             child: const Text(
                               'Go to Home',
@@ -377,6 +312,4 @@ Future<void>createUserWithEmailAndPassword()async{
       ),
     );
   }
-
-  
 }
